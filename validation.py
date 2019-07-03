@@ -76,7 +76,10 @@ class IpValidation(Utility):
 
     def get_real_ip(self):
         resp = requests.get(ANON_CHECK_URL)
-        self.real_ip = resp.json()['X-Real-Ip']
+        if self.anon_check_url == ANON_CHECK_URL:
+            self.real_ip = resp.json()['origin'].split(',')[0]
+        else:
+            self.real_ip = resp.json()['X-Real-Ip']
 
     def run_validation(self, key=None):
         if key:
