@@ -19,6 +19,7 @@ class IpValidation(Utility):
         # 每次验证不成功，减去的分值
         self.minus_every_time = (INITIAL_SCORE - DISCARD_SCORE) // VALIDATE_TIME
         self.key = PROXY_ORIGINAL
+        self.anon_check_url = 'http://httpbin.org/ip'
 
     @staticmethod
     async def is_proxy_valid(proxy, url=TEST_URL):
@@ -49,7 +50,11 @@ class IpValidation(Utility):
                     code = resp.status
                     if 200 <= code < 300:
                         x_forwarded_for_json = await resp.json()
-                        x_forwarded_for = x_forwarded_for_json['X-Forwarded-For']
+                        if self.anon_check_url == ANON_CHECK_URL:
+                            x_forwarded_for = x_forwarded_for_json['origin']
+                        else:
+                            # 根据接口自己定义
+                            x_forwarded_for = x_forwarded_for_json['X-Forwarded-For']
                         if self.real_ip in x_forwarded_for:
                             return False
                         return True
