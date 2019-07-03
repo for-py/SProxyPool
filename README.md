@@ -17,7 +17,7 @@
         - js2py
 - Redis
 - 相关依赖
-    > pip install -r requirements
+    > pip install -r requirements.txt
 
 ## 实现的功能
 - 利用asyncio和aiohttp实现异步并发请求
